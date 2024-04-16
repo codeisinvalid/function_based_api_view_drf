@@ -7,4 +7,4 @@ class StudentAdmin(admin.ModelAdmin):
     list_display_links=['name']
 
 # Register your models here.
-admin.site.register(Student)
+admin.site.register(Student, StudentAdmin)

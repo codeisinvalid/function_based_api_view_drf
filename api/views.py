@@ -1,27 +1,26 @@
-from django.shortcuts import render
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from .models import Student
+from .serializers import StudentSerializer
+from django.http import Http404
 
-# Create your views here.
-# @api_view()
-# def student_create(request):
-#     return Response({'msg':'Hello, World'})
-    
-# @api_view(['GET'])
-# def student_create(request):
-#     return Response({'msg':'Hello, World'})
-    
-# @api_view(['POST'])
-# def student_create(request):
-#     if request.method=='POST':
-#         print(request.data)
-#         return Response({'msg':'Hello, World! This is post request'})
-    
-@api_view(['GET','POST'])
-def student_create(request):
+
+@api_view(['GET', 'POST', 'PUT', 'DELETE'])
+def student_api(request):
     if request.method == 'GET':
-        return Response({'msg':'Hello, world! This is get request.'})
-    if request.method=='POST':
-        print(request.data)
-        return Response({'msg':'Hello, World! This is post request', 'data':request.data})
-    
+        print("Query Params:", request.query_params)
+
+        id = request.query_params.get('id')
+        print("ID:", id)
+
+        if id is not None: 
+            try:          
+                student = Student.objects.get(id=id)
+                serializer = StudentSerializer(student)
+                return Response(serializer.data)  
+            except Student.DoesNotExist:
+                raise Http404("Student does not exist") 
+        else:
+            students = Student.objects.all()
+            serializer = StudentSerializer(students, many=True)
+            return Response(serializer.data)
