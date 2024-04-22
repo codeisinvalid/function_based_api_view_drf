@@ -9,10 +9,8 @@ from django.http import Http404
 def student_api(request):
     if request.method == 'GET':
         print("Query Params:", request.query_params)
-
         id = request.query_params.get('id')
         print("ID:", id)
-
         if id is not None: 
             try:          
                 student = Student.objects.get(id=id)
@@ -24,3 +22,19 @@ def student_api(request):
             students = Student.objects.all()
             serializer = StudentSerializer(students, many=True)
             return Response(serializer.data)
+        
+    if request.method=="POST":
+        serializer = StudentSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'msg':'Data created'})
+        return Response(serializer.errors)
+    
+    if request.method=='PUT':
+        id = request.data.get('id')
+        student = Student.objects.get(pk=id)
+        serializer = StudentSerializer(student, data= request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'msg':'Data Updated'})
+        return Response(serializer.errors)

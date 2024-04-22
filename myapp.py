@@ -13,18 +13,19 @@ def get_data(id=None):
     data = r.json()
     print(data)
 
-get_data(2)
+# get_data(2)
 
 def post_data():
     data = {
-        'name':'Shantee Banstola',
-        'roll':290,
+        'name':'Sujita Kshettry',
+        'roll':15,
         'city':'USA',
         'grade':'B.Economics'
     }
+    headers = {'content-Type':'application/json'}
 
     json_data = json.dumps(data)
-    r = requests.post(url = URL, data = json_data)
+    r = requests.post(url = URL, headers=headers, data = json_data)
     data = r.json()
     print(data)
 
@@ -39,12 +40,14 @@ def update_data():
         'city':'Palpa',
         'grade':'B.Tech'
     }
+    headers = {'content-Type':'application/json'}
+
     json_data = json.dumps(data)
-    r = requests.put(url = URL, data = json_data)
+    r = requests.put(url = URL, headers=headers, data = json_data)
     data = r.json()
     print(data)
 
-# update_data()
+update_data()
 
 def delete_data():
 
